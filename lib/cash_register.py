@@ -5,7 +5,7 @@ class CashRegister:
         self.discount = discount
         self.total = 0
         self.items = []
-        self._previous_transactions = []
+        self.previous_transactions = []
 
     @property
     def discount(self):
@@ -24,7 +24,7 @@ class CashRegister:
         self.total += price * quantity
         for _ in range(quantity):
             self.items.append(item)
-        self._previous_transactions.append({"item": item, "price": price, "quantity": quantity})
+        self.previous_transactions.append({"item": item, "price": price, "quantity": quantity})
 
     def apply_discount(self):
         if self.discount <= 0:
@@ -32,18 +32,15 @@ class CashRegister:
         else:
             discount_amount = self.total * (self.discount / 100)
             self.total -= discount_amount
-            # The test expects a specific message format
-            # Converting to int if it's a whole number to match tests ($800 vs $800.0)
             display_total = int(self.total) if self.total == int(self.total) else self.total
             print(f"After the discount, the total comes to ${display_total}.")
 
     def void_last_transaction(self):
-        if not self._previous_transactions:
+        if not self.previous_transactions:
             print("There is no transaction to void.")
         else:
-            last = self._previous_transactions.pop()
+            last = self.previous_transactions.pop()
             self.total -= last["price"] * last["quantity"]
-            # Remove the items added by this transaction
             for _ in range(last["quantity"]):
                 if last["item"] in self.items:
                     self.items.remove(last["item"])
